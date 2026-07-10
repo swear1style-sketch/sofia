@@ -18,12 +18,8 @@ function Index() {
     <LiquidNav />
     <div
       className="relative min-h-screen flex flex-col"
-      style={{ background: "var(--gradient-hero)" }}
+      style={{ background: "oklch(0.895 0.055 297)" }}
     >
-      {/* Ambient glows */}
-      <div className="pointer-events-none absolute -top-40 -left-40 h-[500px] w-[500px] rounded-full bg-primary/25 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-40 right-0 h-[600px] w-[600px] rounded-full bg-accent/40 blur-3xl" />
-
       {/* Hero */}
       <section className="relative z-10 mx-auto grid w-full max-w-7xl flex-1 items-center gap-12 px-6 pb-16 pt-28 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:pt-32">
         <motion.div

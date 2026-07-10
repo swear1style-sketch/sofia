@@ -133,19 +133,13 @@ export function ScrollVideoParallax() {
       {/* Pinned viewport */}
       <div
         className="sticky top-0 h-screen w-full overflow-hidden"
-        style={{ backgroundColor: "oklch(0.94 0.045 310)" }}
+        style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
       >
-        {/* Base tone that matches the hero's ending color at the very top,
-            keeping the same lavender family so there is zero visible seam
-            with the hero above. Slight deepening toward the bottom keeps
-            depth without breaking the theme. */}
+        {/* Base tone matches the hero exactly so the boundary is invisible. */}
         <div
           aria-hidden
           className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, oklch(0.94 0.045 310) 0%, oklch(0.9 0.055 300) 50%, oklch(0.86 0.065 295) 100%)",
-          }}
+          style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
         />
 
         {/* Canvas video layer with parallax */}
@@ -168,19 +162,9 @@ export function ScrollVideoParallax() {
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundColor: "oklch(0.885 0.06 293)",
+            backgroundColor: "oklch(0.895 0.055 297)",
             mixBlendMode: "soft-light",
             opacity: 0.35,
-          }}
-        />
-        {/* Gentle top/bottom fade so video edges never feel harsh
-            against the lavender bg. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, oklch(0.94 0.045 310 / 0.35) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, oklch(0.86 0.065 295 / 0.25) 100%)",
           }}
         />
 

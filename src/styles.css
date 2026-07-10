@@ -144,7 +144,7 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: oklch(0.94 0.045 310);
+    background-color: oklch(0.895 0.055 297);
   }
 
   body {
