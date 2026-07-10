@@ -142,13 +142,12 @@ export function ScrollVideoParallax() {
           style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
         />
 
-        {/* Canvas video layer with parallax */}
+        {/* Canvas video layer with parallax — original video, no color grading */}
         <motion.div
           className="absolute inset-0 will-change-transform"
           style={{
             scale: bgScale,
             y: bgY,
-            filter: "brightness(1.5) saturate(1.1)",
             opacity: ready ? 1 : 0,
             transition: "opacity 1.2s ease-out",
           }}
@@ -156,15 +155,15 @@ export function ScrollVideoParallax() {
           <canvas ref={canvasRef} className="h-full w-full" />
         </motion.div>
 
-        {/* Subtle lavender tint so the video reads as part of the hero theme
-            without washing out details. */}
+        {/* Subtle lavender tint at very low opacity so the video still reads
+            as part of the theme without altering brightness. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             backgroundColor: "oklch(0.895 0.055 297)",
             mixBlendMode: "soft-light",
-            opacity: 0.35,
+            opacity: 0.18,
           }}
         />
 

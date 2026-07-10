@@ -67,7 +67,7 @@ export function LiquidNav() {
           className="pointer-events-none absolute inset-x-6 top-0 h-px rounded-full bg-gradient-to-r from-transparent via-white/80 to-transparent"
         />
 
-        <a href={SOFIA} target="_blank" rel="noopener" className="relative flex items-center gap-2 pl-3 pr-2">
+        <a href={SOFIA} target="_blank" rel="noopener noreferrer" className="relative flex items-center gap-2 pl-3 pr-2">
           <img src={SOFIA_LOGO} alt="sofiapulse" className="h-6 w-auto" />
         </a>
 
@@ -77,7 +77,7 @@ export function LiquidNav() {
               key={l.label}
               href={l.href}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="group relative rounded-full px-4 py-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
             >
               <span className="absolute inset-0 rounded-full bg-white/0 transition-colors group-hover:bg-white/50" />
@@ -92,7 +92,7 @@ export function LiquidNav() {
         <a
           href={CONTACT}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform hover:scale-[1.03]"
         >
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
