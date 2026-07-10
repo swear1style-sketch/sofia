@@ -154,24 +154,12 @@ export function ScrollVideoParallax() {
           style={{
             scale: bgScale,
             y: bgY,
-            filter: "brightness(1.25) contrast(1.05) saturate(1.05)",
             opacity: ready ? 1 : 0,
             transition: "opacity 1.2s ease-out",
           }}
         >
           <canvas ref={canvasRef} className="h-full w-full" />
         </motion.div>
-
-        {/* Soft top vignette so the video edge blends into the hero
-            when the section is first pinned. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-40 sm:h-56"
-          style={{
-            background:
-              "linear-gradient(to bottom, oklch(0.9 0.06 295) 0%, rgba(0,0,0,0) 100%)",
-          }}
-        />
 
         {/* Hidden source video */}
         <video

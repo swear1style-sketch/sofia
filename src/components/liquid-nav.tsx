@@ -1,5 +1,6 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 const SOFIA_LOGO = "/sofialogo.svg";
 
@@ -19,11 +20,29 @@ export function LiquidNav() {
   const blur = useTransform(scrollY, [0, 120], [16, 28]);
   const scale = useTransform(scrollY, [0, 120], [1, 0.97]);
 
+  // Auto-hide on scroll down, reveal on scroll up
+  const [hidden, setHidden] = useState(false);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    const delta = latest - prev;
+    // Ignore tiny jitters; require a meaningful gesture
+    if (Math.abs(delta) < 6) return;
+    if (latest < 80) {
+      setHidden(false); // Always visible near the top
+      return;
+    }
+    if (delta > 0) setHidden(true); // scrolling down
+    else setHidden(false); // scrolling up
+  });
+
   return (
     <motion.header
       initial={{ y: -40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      animate={{ y: hidden ? -140 : 0, opacity: hidden ? 0 : 1 }}
+      transition={{
+        y: { type: "spring", stiffness: 220, damping: 28, mass: 0.9 },
+        opacity: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+      }}
       style={{ scale }}
       className="fixed left-1/2 top-4 z-50 w-[min(1180px,calc(100%-2rem))] -translate-x-1/2"
     >
