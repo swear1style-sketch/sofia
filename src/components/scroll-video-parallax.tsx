@@ -133,18 +133,18 @@ export function ScrollVideoParallax() {
       {/* Pinned viewport */}
       <div
         className="sticky top-0 h-screen w-full overflow-hidden"
-        style={{ backgroundColor: "oklch(0.9 0.06 295)" }}
+        style={{ backgroundColor: "oklch(0.94 0.045 310)" }}
       >
         {/* Base tone that matches the hero's ending color at the very top,
-            then deepens toward the bottom for cinematic mood. This lives
-            BEHIND the canvas so the moment the section enters, there is
-            zero visible seam with the hero above. */}
+            keeping the same lavender family so there is zero visible seam
+            with the hero above. Slight deepening toward the bottom keeps
+            depth without breaking the theme. */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, oklch(0.9 0.06 295) 0%, oklch(0.82 0.05 300) 45%, oklch(0.76 0.045 302) 100%)",
+              "linear-gradient(to bottom, oklch(0.94 0.045 310) 0%, oklch(0.9 0.055 300) 50%, oklch(0.86 0.065 295) 100%)",
           }}
         />
 
@@ -154,12 +154,35 @@ export function ScrollVideoParallax() {
           style={{
             scale: bgScale,
             y: bgY,
+            filter: "brightness(1.5) saturate(1.1)",
             opacity: ready ? 1 : 0,
             transition: "opacity 1.2s ease-out",
           }}
         >
           <canvas ref={canvasRef} className="h-full w-full" />
         </motion.div>
+
+        {/* Subtle lavender tint so the video reads as part of the hero theme
+            without washing out details. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundColor: "oklch(0.885 0.06 293)",
+            mixBlendMode: "soft-light",
+            opacity: 0.35,
+          }}
+        />
+        {/* Gentle top/bottom fade so video edges never feel harsh
+            against the lavender bg. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, oklch(0.94 0.045 310 / 0.35) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, oklch(0.86 0.065 295 / 0.25) 100%)",
+          }}
+        />
 
         {/* Hidden source video */}
         <video
@@ -168,7 +191,6 @@ export function ScrollVideoParallax() {
           muted
           playsInline
           preload="auto"
-          crossOrigin="anonymous"
           className="hidden"
         />
       </div>
