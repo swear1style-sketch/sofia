@@ -83,7 +83,7 @@
   --border: oklch(0.86 0.04 295);
   --input: oklch(0.86 0.04 295);
   --ring: oklch(0.62 0.22 290);
-  --gradient-hero: linear-gradient(135deg, oklch(0.885 0.06 293) 0%, oklch(0.94 0.045 310) 100%);
+  --gradient-hero: linear-gradient(135deg, oklch(0.888 0.035 294) 0%, oklch(0.888 0.035 294) 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.62 0.22 290), oklch(0.72 0.2 295));
   --shadow-glow: 0 20px 50px -12px oklch(0.62 0.22 290 / 0.55);
   --shadow-card: 0 30px 60px -15px oklch(0.35 0.15 285 / 0.35);
@@ -144,7 +144,7 @@
 
   html {
     scroll-behavior: smooth;
-    background-color: oklch(0.895 0.055 297);
+    background-color: oklch(0.888 0.035 294);
   }
 
   body {
