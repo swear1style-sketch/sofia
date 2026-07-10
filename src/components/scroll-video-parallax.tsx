@@ -131,7 +131,23 @@ export function ScrollVideoParallax() {
       style={{ height: "432vh" }}
     >
       {/* Pinned viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ backgroundColor: "oklch(0.785 0.035 302.5)" }}>
+      <div
+        className="sticky top-0 h-screen w-full overflow-hidden"
+        style={{ backgroundColor: "oklch(0.9 0.06 295)" }}
+      >
+        {/* Base tone that matches the hero's ending color at the very top,
+            then deepens toward the bottom for cinematic mood. This lives
+            BEHIND the canvas so the moment the section enters, there is
+            zero visible seam with the hero above. */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, oklch(0.9 0.06 295) 0%, oklch(0.82 0.05 300) 45%, oklch(0.76 0.045 302) 100%)",
+          }}
+        />
+
         {/* Canvas video layer with parallax */}
         <motion.div
           className="absolute inset-0 will-change-transform"
@@ -139,10 +155,23 @@ export function ScrollVideoParallax() {
             scale: bgScale,
             y: bgY,
             filter: "brightness(1.25) contrast(1.05) saturate(1.05)",
+            opacity: ready ? 1 : 0,
+            transition: "opacity 1.2s ease-out",
           }}
         >
           <canvas ref={canvasRef} className="h-full w-full" />
         </motion.div>
+
+        {/* Soft top vignette so the video edge blends into the hero
+            when the section is first pinned. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-40 sm:h-56"
+          style={{
+            background:
+              "linear-gradient(to bottom, oklch(0.9 0.06 295) 0%, rgba(0,0,0,0) 100%)",
+          }}
+        />
 
         {/* Hidden source video */}
         <video

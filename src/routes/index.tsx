@@ -83,16 +83,6 @@ function Index() {
           <HeroCardStack />
         </motion.div>
       </section>
-
-      {/* Seamless color blend into cinematic section */}
-      <div
-        aria-hidden
-        className="pointer-events-none relative z-10 h-24 w-full sm:h-32"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, oklch(0.785 0.035 302.5) 100%)",
-        }}
-      />
     </div>
 
     <ScrollVideoParallax />
