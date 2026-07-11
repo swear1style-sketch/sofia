@@ -6,7 +6,6 @@ import { useRef, useState } from "react";
 import { HeroCardStack } from "@/components/hero-card-stack";
 import { IntroLoader } from "@/components/intro-loader";
 import { LiquidNav } from "@/components/liquid-nav";
-import { ScrollVideoParallax } from "@/components/scroll-video-parallax";
 import { SmoothScroll } from "@/components/smooth-scroll";
 
 const SOFIA_CONTACT = "https://www.sofiapulse.com/#Contact";
@@ -20,7 +19,7 @@ const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
 function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
-    <span className="inline-block overflow-hidden align-bottom pr-[0.18em] pb-[0.15em] -mb-[0.15em]">
+    <span className="inline-block overflow-hidden align-bottom pb-[0.15em] -mb-[0.15em]">
       <motion.span
         className="inline-block"
         initial={{ y: "110%" }}
@@ -34,10 +33,7 @@ function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: numb
 }
 
 function Index() {
-  const [ready, setReady] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem("sofia_intro_seen") === "1";
-  });
+  const [ready, setReady] = useState(false);
 
   const heroRef = useRef<HTMLElement | null>(null);
   const { scrollYProgress: heroProgress } = useScroll({
@@ -97,17 +93,17 @@ function Index() {
               AI-Powered Creative Platform
             </motion.div>
 
-            <h1 className="font-extrabold leading-[1.02] tracking-[-0.02em] text-foreground text-4xl sm:text-5xl lg:text-6xl xl:text-7xl">
-              <div>
-                <Word delay={D + 0.05}>Better</Word>
+            <h1
+              className="font-bold leading-[1.08] tracking-tight text-foreground text-4xl sm:text-5xl lg:text-6xl xl:text-7xl"
+              style={{ textShadow: "0 2px 30px rgba(100,40,180,0.08)" }}
+            >
+              <div className="pb-2">
+                <Word delay={D + 0.05}>Better</Word>{" "}
                 <Word delay={D + 0.18}>Creative</Word>
               </div>
-              <div
-                className="bg-clip-text text-transparent"
-                style={{ backgroundImage: "var(--gradient-primary)" }}
-              >
-                <Word delay={D + 0.35}>that</Word>
-                <Word delay={D + 0.45}>gets</Word>
+              <div className="text-primary whitespace-nowrap">
+                <Word delay={D + 0.35}>that</Word>{" "}
+                <Word delay={D + 0.45}>gets</Word>{" "}
                 <Word delay={D + 0.55}>Smarter.</Word>
               </div>
             </h1>
@@ -132,7 +128,7 @@ function Index() {
                 href={SOFIA_CONTACT}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-transform duration-500 hover:scale-[1.03]"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-glow)] transition-all duration-700 hover:scale-[1.03] hover:shadow-[0_24px_60px_-12px_oklch(0.62_0.22_290_/_0.65)]"
               >
                 <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-[900ms] ease-out group-hover:translate-x-full" />
                 <span className="relative">Create smarter ads</span>
@@ -194,7 +190,6 @@ function Index() {
         </motion.div>
       </motion.section>
 
-      <ScrollVideoParallax />
     </SmoothScroll>
   );
 }

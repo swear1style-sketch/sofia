@@ -133,13 +133,13 @@ export function ScrollVideoParallax() {
       {/* Pinned viewport */}
       <div
         className="sticky top-0 h-screen w-full overflow-hidden"
-        style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
+        style={{ backgroundColor: "#e7dbf2" }}
       >
         {/* Base tone matches the hero exactly so the boundary is invisible. */}
         <div
           aria-hidden
           className="absolute inset-0"
-          style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
+          style={{ backgroundColor: "#e7dbf2" }}
         />
 
         {/* Canvas video layer with parallax — original video, no color grading */}
@@ -161,7 +161,7 @@ export function ScrollVideoParallax() {
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            backgroundColor: "oklch(0.895 0.055 297)",
+            backgroundColor: "#e7dbf2",
             mixBlendMode: "soft-light",
             opacity: 0.18,
           }}

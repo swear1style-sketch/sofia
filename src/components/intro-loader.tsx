@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 const LOGO_SRC = "/sofialogo.svg";
 
-const BRAND = "oklch(0.895 0.055 297)";
+const BRAND = "#e7dbf2";
 const INK = "oklch(0.19 0.06 285)";
 const ACCENT = "oklch(0.62 0.22 290)";
 
@@ -18,10 +18,7 @@ const ACCENT = "oklch(0.62 0.22 290)";
  * once per session — luxury, not annoyance.
  */
 export function IntroLoader({ onDone }: { onDone?: () => void }) {
-  const [alive, setAlive] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return sessionStorage.getItem("sofia_intro_seen") !== "1";
-  });
+  const [alive, setAlive] = useState(true);
 
   useEffect(() => {
     if (!alive) {
@@ -32,7 +29,6 @@ export function IntroLoader({ onDone }: { onDone?: () => void }) {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const t = window.setTimeout(() => {
-      sessionStorage.setItem("sofia_intro_seen", "1");
       setAlive(false);
       onDone?.();
       document.body.style.overflow = prev;
@@ -87,11 +83,22 @@ export function IntroLoader({ onDone }: { onDone?: () => void }) {
 
           {/* Brand mark stack */}
           <div className="relative z-10 flex flex-col items-center gap-4">
-            <div className="overflow-hidden">
+            <div className="relative overflow-hidden">
+              {/* Shimmer behind logo */}
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 -inset-x-8"
+                style={{
+                  background: `radial-gradient(ellipse at center, ${ACCENT}20 0%, transparent 70%)`,
+                }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: [0, 0.8, 0.4], scale: [0.5, 1.2, 1] }}
+                transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
+              />
               <motion.img
                 src={LOGO_SRC}
                 alt="sofiapulse"
-                className="h-9 w-auto sm:h-10"
+                className="relative h-9 w-auto sm:h-10"
                 initial={{ y: "110%", opacity: 0 }}
                 animate={{ y: "0%", opacity: 1 }}
                 exit={{ y: "-40%", opacity: 0 }}
@@ -108,10 +115,12 @@ export function IntroLoader({ onDone }: { onDone?: () => void }) {
                 exit={{ y: "-30%", opacity: 0 }}
                 transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1], delay: 0.95 }}
               >
-                <span
+                <motion.span
                   aria-hidden
                   className="inline-block h-1.5 w-1.5 rounded-full"
                   style={{ backgroundColor: ACCENT, boxShadow: `0 0 12px ${ACCENT}` }}
+                  animate={{ scale: [1, 1.4, 1], opacity: [1, 0.7, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 />
                 Better creative, smarter
               </motion.div>
@@ -150,6 +159,7 @@ export function IntroLoader({ onDone }: { onDone?: () => void }) {
 
 function ProgressCount({ duration }: { duration: number }) {
   const [n, setN] = useState(0);
+  const [done, setDone] = useState(false);
   useEffect(() => {
     const start = performance.now();
     let id = 0;
@@ -159,13 +169,20 @@ function ProgressCount({ duration }: { duration: number }) {
       const eased = 1 - Math.pow(1 - p, 3);
       setN(Math.round(eased * 100));
       if (p < 1) id = requestAnimationFrame(tick);
+      else setDone(true);
     };
     id = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(id);
   }, [duration]);
   return (
     <>
-      <span className="tabular-nums">{String(n).padStart(3, "0")}</span>
+      <motion.span
+        className="tabular-nums"
+        animate={done ? { scale: [1, 1.15, 1] } : {}}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {String(n).padStart(3, "0")}
+      </motion.span>
       <span style={{ backgroundColor: "currentColor", opacity: 0.4 }} className="inline-block h-px w-6" />
       <span>Loading</span>
     </>

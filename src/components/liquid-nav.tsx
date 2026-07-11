@@ -16,8 +16,8 @@ const links = [
 
 export function LiquidNav() {
   const { scrollY } = useScroll();
-  const bgOpacity = useTransform(scrollY, [0, 120], [0.35, 0.7]);
-  const blur = useTransform(scrollY, [0, 120], [16, 28]);
+  const bgOpacity = useTransform(scrollY, [0, 120], [0.35, 0.72]);
+  const blur = useTransform(scrollY, [0, 120], [20, 36]);
   const scale = useTransform(scrollY, [0, 120], [1, 0.97]);
 
   // Auto-hide on scroll down, reveal on scroll up
@@ -40,7 +40,7 @@ export function LiquidNav() {
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: hidden ? -140 : 0, opacity: hidden ? 0 : 1 }}
       transition={{
-        y: { type: "spring", stiffness: 220, damping: 28, mass: 0.9 },
+        y: { type: "spring", stiffness: 220, damping: 32, mass: 0.9 },
         opacity: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
       }}
       style={{ scale }}
@@ -97,7 +97,7 @@ export function LiquidNav() {
         >
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
           <span className="relative">Get Started</span>
-          <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight className="relative h-4 w-4 transition-transform duration-500 group-hover:translate-x-1" />
         </a>
       </motion.div>
     </motion.header>

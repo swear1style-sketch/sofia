@@ -76,7 +76,7 @@ export function HeroCardStack() {
         setCards((prev) => [...prev.slice(1), prev[0]]);
         setFlying(false);
       }, 900);
-    }, 3600);
+    }, 4200);
     return () => clearInterval(id);
   }, []);
 
@@ -85,18 +85,18 @@ export function HeroCardStack() {
       ref={containerRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      className="relative mx-auto flex h-[560px] w-full max-w-[640px] items-end justify-center select-none"
+      className="relative mx-auto flex h-[620px] w-full max-w-[700px] items-end justify-center select-none"
       style={{ perspective: "1600px" }}
     >
       {/* Ambient glow beneath the deck — kept ultra subtle so the flat lavender
           hero stays clean; just enough to seat the deck in space. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute bottom-6 left-1/2 h-28 w-[70%] -translate-x-1/2 rounded-full opacity-70"
+        className="pointer-events-none absolute bottom-10 left-1/2 h-40 w-[80%] -translate-x-1/2 rounded-full opacity-60"
         style={{
           background:
-            "radial-gradient(closest-side, oklch(0.62 0.22 290 / 0.28), transparent 70%)",
-          filter: "blur(24px)",
+            "radial-gradient(closest-side, oklch(0.62 0.22 290 / 0.22), transparent 70%)",
+          filter: "blur(32px)",
         }}
       />
 
@@ -105,7 +105,7 @@ export function HeroCardStack() {
         src={podiumImage}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute bottom-2 left-1/2 z-0 h-auto w-[280px] max-w-[75%] -translate-x-1/2"
+        className="pointer-events-none absolute bottom-6 left-1/2 z-0 h-auto w-[380px] max-w-[85%] -translate-x-1/2"
         width={461}
         height={195}
         loading="lazy"
@@ -113,7 +113,7 @@ export function HeroCardStack() {
 
       {/* Deck */}
       <motion.div
-        className="relative -translate-y-32 -translate-x-4 h-[264px] w-[340px] max-w-full"
+        className="relative -translate-y-44 -translate-x-4 h-[300px] w-[380px] max-w-full"
         style={{
           transformStyle: "preserve-3d",
           rotateX: deckRotateX,
@@ -122,9 +122,9 @@ export function HeroCardStack() {
       >
         {cards.map((card, i) => {
           const isTop = i === 0;
-          const offsetX = i * 14;
-          const offsetY = i * -4;
-          const scale = 1 - i * 0.035;
+          const offsetX = i * 18;
+          const offsetY = i * -5;
+          const scale = 1 - i * 0.03;
           const zIndex = cards.length - i;
           const thickness = 44;
 
@@ -230,6 +230,15 @@ export function HeroCardStack() {
                       </span>
                     )}
                   </div>
+                  {/* Glass reflection overlay */}
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-2xl"
+                    style={{
+                      background:
+                        "linear-gradient(165deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 35%, transparent 55%)",
+                    }}
+                  />
                   {card.badge && (
                     <div className="absolute bottom-3 right-3 rounded-full bg-foreground/90 px-3 py-1 text-[10px] font-bold tracking-wider text-background">
                       {card.badge}
