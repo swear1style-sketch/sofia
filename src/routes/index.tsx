@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { HeroCardStack } from "@/components/hero-card-stack";
 import { IntroLoader } from "@/components/intro-loader";
 import { LiquidNav } from "@/components/liquid-nav";
+import { StoryboardParallax } from "@/components/storyboard-parallax";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { WhatWeOffer } from "@/components/what-we-offer";
 
@@ -190,8 +191,8 @@ function Index() {
           />
         </motion.div>
       </motion.section>
+      <StoryboardParallax />
       <WhatWeOffer />
-
     </SmoothScroll>
   );
 }
