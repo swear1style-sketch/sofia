@@ -5,6 +5,7 @@ import { ArrowRight, Play, Sparkles } from "lucide-react";
 import { HeroCardStack } from "@/components/hero-card-stack";
 import { ScrollVideoParallax } from "@/components/scroll-video-parallax";
 import { LiquidNav } from "@/components/liquid-nav";
+import { WhatWeOffer } from "@/components/what-we-offer";
 
 const SOFIA_CONTACT = "https://www.sofiapulse.com/#Contact";
 
@@ -107,6 +108,8 @@ function Index() {
     </div>
 
     <ScrollVideoParallax />
+    <br />
+    <WhatWeOffer />
     </>
   );
 }

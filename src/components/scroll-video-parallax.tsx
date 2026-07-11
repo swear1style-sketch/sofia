@@ -30,8 +30,8 @@ export function ScrollVideoParallax() {
   });
 
   // Foreground parallax layers
-  const bgScale = useTransform(smoothProgress, [0, 0.5, 1], [1.1, 1.03, 1.12]);
-  const bgY = useTransform(smoothProgress, [0, 1], ["-3%", "3%"]);
+  const bgScale = useTransform(smoothProgress, [0, 0.5, 1], [1.05, 1.0, 1.05]);
+  const bgY = useTransform(smoothProgress, [0, 1], ["-1.5%", "1.5%"]);
 
   // Load & prepare video
   useEffect(() => {
