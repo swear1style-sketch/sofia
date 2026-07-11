@@ -20,7 +20,7 @@ const EASE_OUT = [0.22, 1, 0.36, 1] as const;
 
 function Word({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
-    <span className="inline-block overflow-hidden align-bottom pr-[0.18em]">
+    <span className="inline-block overflow-hidden align-bottom pr-[0.18em] pb-[0.15em] -mb-[0.15em]">
       <motion.span
         className="inline-block"
         initial={{ y: "110%" }}
@@ -62,7 +62,7 @@ function Index() {
       <motion.section
         ref={heroRef}
         className="relative min-h-screen w-full overflow-hidden"
-        style={{ backgroundColor: "oklch(0.895 0.055 297)" }}
+        style={{ backgroundColor: "#e7dbf2" }}
       >
         {/* Ultra-fine grain to lift the flat lavender from digital-flat to
             premium matte. Kept below 3% opacity so it never becomes noise. */}
