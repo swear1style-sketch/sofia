@@ -7,6 +7,7 @@ import { HeroCardStack } from "@/components/hero-card-stack";
 import { IntroLoader } from "@/components/intro-loader";
 import { LiquidNav } from "@/components/liquid-nav";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { WhatWeOffer } from "@/components/what-we-offer";
 
 const SOFIA_CONTACT = "https://www.sofiapulse.com/#Contact";
 
@@ -189,6 +190,7 @@ function Index() {
           />
         </motion.div>
       </motion.section>
+      <WhatWeOffer />
 
     </SmoothScroll>
   );
