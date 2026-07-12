@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import "./what-we-offer.css";
 import whatWeDoVideo from "../assets/what-we-do.mp4";
 
@@ -55,6 +56,13 @@ export function WhatWeOffer() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const prevStepRef = useRef(0);
   const rafRef = useRef<number | null>(null);
+
+  /* ── Track scroll progress for the notch indicator ── */
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start center", "end center"],
+  });
+  const notchTop = useTransform(scrollYProgress, [0, 1], ["10%", "90%"]);
 
   /* ── Scroll-driven step activation — pick the step closest to viewport center ── */
   useEffect(() => {
@@ -216,7 +224,7 @@ export function WhatWeOffer() {
   const scrubberX = getScrubberX();
 
   return (
-    <section id="features" className="features-section">
+    <section id="features" className="features-section" ref={sectionRef}>
       {/* ── Header ── */}
       <div className="features-header">
         <div className="features-header-top">
@@ -263,98 +271,31 @@ export function WhatWeOffer() {
 
         {/* Sticky video card (left column) */}
         <div className="process-video-sticky">
-          <div className="video-preview-wrapper">
-            {/* iPad Camera */}
-            <div className="video-preview-wrapper-camera" aria-hidden="true" />
-            
-            {/* iPad Home Button */}
-            <div className="video-preview-wrapper-home" aria-hidden="true" />
-
             <div className="tablet-screen">
-              <video
-                id="process-video"
-                ref={videoRef}
-                src={whatWeDoVideo}
-                muted
-                autoPlay
-                loop
-                playsInline
-                preload="auto"
-              />
-
-              {/* Top corner chip */}
-              <div className="video-corner-chip" aria-hidden="true">
-                <span className="chip-dot" />
-                <span className="chip-text">LIVE PREVIEW</span>
+              <div className="video-clip-wrapper">
+                <video
+                  id="process-video"
+                  ref={videoRef}
+                  src={whatWeDoVideo}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="auto"
+                />
               </div>
 
-              {/* Bottom HUD */}
-              <div className="video-hud" aria-hidden="true">
-                <div className="hud-top">
-                  <div className="hud-step">
-                    <div
-                      className={`hud-step-index${isFlipping ? " flipping" : ""}`}
-                      id="hud-step-index"
-                    >
-                      <span className="digit-a">
-                        {String(prevStepRef.current + 1).padStart(2, "0")}
-                      </span>
-                      <span className="digit-b">
-                        {String(activeStep + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <div className="hud-step-info">
-                      <span
-                        className={`hud-label${isFlipping ? " flipping" : ""}`}
-                        id="hud-step-label"
-                      >
-                        {STEP_LABELS[activeStep]}
-                      </span>
-                      <span className="hud-sub">
-                        Step&nbsp;
-                        <span id="hud-step-current">
-                          {String(activeStep + 1).padStart(2, "0")}
-                        </span>
-                        &nbsp;of&nbsp;04
-                      </span>
-                    </div>
-                  </div>
-                  <div className="hud-percent">
-                    <span id="hud-percent">{hudPercent}</span>
-                    <span className="hud-percent-mark">%</span>
-                  </div>
-                </div>
-
-                <div className="hud-track" role="progressbar" ref={trackRef}>
-                  <div className="hud-segments">
-                    {segFills.map((fill, i) => (
-                      <div
-                        key={i}
-                        className={`hud-segment${i === activeStep ? " current" : ""}`}
-                        data-step={i + 1}
-                      >
-                        <span
-                          className="seg-fill"
-                          style={{ width: `${fill}%` }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-
-                  <div
-                    className="hud-scrubber"
-                    aria-hidden="true"
-                    style={{ transform: `translateX(${scrubberX}px)` }}
-                  >
-                    <span className="scrubber-line" />
-                    <span className="scrubber-head" />
-                    <span className="scrubber-halo" />
-                  </div>
-                </div>
+              {/* Scroll-Driven Minimal Line Progress Indicator */}
+              <div className="vertical-glow-track" aria-hidden="true">
+                <motion.div 
+                  className="video-scroll-notch" 
+                  style={{ top: notchTop }} 
+                >
+                  <div className="vibrant-glow-orb" />
+                </motion.div>
               </div>
             </div>
           </div>
-        </div>
       </div>
     </section>
   );

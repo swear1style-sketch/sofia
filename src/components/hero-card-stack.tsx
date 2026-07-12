@@ -90,12 +90,14 @@ export function HeroCardStack() {
         setCards((prev) => {
           const arr = [...prev];
           const top = arr.shift();
-          if (top) arr.push(top);
+          // Assign a new ID so React treats it as a brand new element.
+          // This prevents the card from visibly animating *backwards* into the deck.
+          if (top) arr.push({ ...top, id: Math.random() });
           return arr;
         });
         setFlying(false);
-      }, 900); // Wait for the fly out to visually clear before popping it to the back
-    }, 3600);
+      }, 2200); // Wait for the new, slower slide-out to visually clear
+    }, 4800); // Increased cycle slightly so the slow animation doesn't overlap
 
     return () => clearInterval(interval);
   }, []);
@@ -147,20 +149,22 @@ export function HeroCardStack() {
           const zIndex = cards.length - i;
           const thickness = 44;
 
-          // Fly-out choreography for the top card
+          // Premium slide-to-right choreography for the top card
           const flyState = isTop && flying
             ? {
-                x: offsetX + 220,
-                y: offsetY - 80,
-                scale: 0.78,
-                rotateY: -55,
-                rotateX: 14,
-                rotateZ: 8,
-                filter: isMobile ? "brightness(0.9)" : "blur(2px) brightness(0.9)",
-                opacity: 0,
+                x: offsetX + 350, // Float right just enough to clear
+                y: offsetY - 25, // Gentle lift
+                scale: 1.05, // Subtle expansion as if picked up
+                rotateY: -15, // Angled beautifully towards camera
+                rotateX: 5,
+                rotateZ: 12, // Organic tilt as it drifts
+                filter: isMobile ? "brightness(1.1)" : "blur(8px) brightness(1.2)", // Smoothly blurs and brightens out
+                opacity: 0, // Dissolves evenly over the full slide
                 transition: {
-                  duration: 0.9,
-                  ease: [0.65, 0, 0.35, 1] as [number, number, number, number],
+                  type: "spring",
+                  stiffness: 45, // Much looser spring
+                  damping: 30, // Higher damping for smooth stop
+                  mass: 2, // Heavier mass for slower initial movement
                 },
               }
             : null;
@@ -183,7 +187,7 @@ export function HeroCardStack() {
                   opacity: i > 4 ? 0 : 1,
                 }
               }
-              transition={{ type: "spring", stiffness: 140, damping: 22, mass: 0.9 }}
+              transition={{ type: "spring", stiffness: 120, damping: 20, mass: 1 }}
             >
               <motion.div
                 className="relative h-full w-full"
@@ -225,8 +229,11 @@ export function HeroCardStack() {
                 />
                 {/* Front face */}
                 <div
-                  className="absolute inset-0 overflow-hidden rounded-2xl border border-white/40 bg-card shadow-[var(--shadow-card)]"
-                  style={{ transform: "translateZ(0)" }}
+                  className="absolute inset-0 overflow-hidden rounded-2xl border border-white/40 bg-card"
+                  style={{ 
+                    transform: "translateZ(0)",
+                    boxShadow: "var(--shadow-card), 0 0 30px rgba(160, 110, 210, 0.5), 0 0 80px rgba(160, 110, 210, 0.4)"
+                  }}
                 >
                   <div className="flex items-center gap-1.5 bg-background/90 px-3 py-2">
                     <span className="h-2 w-2 rounded-full bg-primary/30" />

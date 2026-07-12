@@ -217,63 +217,26 @@
   padding-bottom: 4rem;
 }
 
-/* Video card — styled as a premium minimalistic iPad */
-.video-preview-wrapper {
+/* Inner screen container */
+.tablet-screen {
   width: 95%; /* Covers almost the entire left column for maximum size */
   aspect-ratio: 4 / 5;
   max-height: 92vh; /* Allows it to be as tall as possible safely */
-  border-radius: 36px; /* Smooth iPad corners */
-  padding: 40px 14px; /* Classic iPad: thick top/bottom bezels, thin sides */
-  background: linear-gradient(145deg, var(--card) 0%, color-mix(in oklch, var(--primary) 18%, var(--card)) 100%);
-  border: 1px solid var(--border); /* Soft theme outline */
   position: relative;
-  transform: translateZ(0); /* Hardware acceleration for sticky scrolling */
+  /* Removed overflow: hidden so the notch can physically extend OUTSIDE the video */
+  border-radius: 16px;
+  transform: translateZ(0);
   will-change: transform;
-  box-shadow:
-    0 40px 80px -20px oklch(0.35 0.15 285 / 0.15),
-    inset 0 0 0 1px rgba(0,0,0,0.06), /* Inner depth */
-    -20px 20px 60px rgba(0,0,0,0.04); /* Ambient premium shadow */
+  /* Removed background: #000; to prevent subpixel black lines peeking through the edges */
 }
 
-/* Camera dot for the tablet */
-.video-preview-wrapper-camera {
+/* This inner wrapper clips the video so it still has rounded corners, but allows the notch outside */
+.video-clip-wrapper {
   position: absolute;
-  top: 17px; /* Centered in the 40px top bezel */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--muted-foreground);
-  z-index: 10;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-}
-
-/* iPad Home Button */
-.video-preview-wrapper-home {
-  position: absolute;
-  bottom: 10px; /* Centered in the 40px bottom bezel */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: transparent;
-  z-index: 10;
-}
-
-/* Inner screen container */
-.tablet-screen {
-  position: absolute;
-  top: 40px;
-  bottom: 40px;
-  left: 14px;
-  right: 14px;
-  border-radius: 6px; /* Authentic iPad screen corner radius */
+  inset: 0;
+  border-radius: 16px;
   overflow: hidden;
-  background: #000;
-  border: 1px solid var(--border); /* Soft screen rim */
+  z-index: 1;
 }
 
 #process-video {
@@ -288,304 +251,56 @@
 .tablet-screen::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, oklch(0.15 0.05 285 / 0.6) 0%, oklch(0.15 0.05 285 / 0) 22%),
-    linear-gradient(0deg, oklch(0.12 0.04 285 / 0.92) 0%, oklch(0.12 0.04 285 / 0) 38%);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background: linear-gradient(180deg, oklch(0.12 0.04 285 / 0.55), transparent);
   pointer-events: none;
   z-index: 2;
 }
 
-/* ---- Corner chip ---- */
-.video-corner-chip {
-  position: absolute;
-  top: 1.15rem;
-  left: 1.15rem;
-  z-index: 6;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.42rem 0.75rem;
-  background: oklch(0.15 0.04 285 / 0.55);
-  border: 1px solid oklch(1 0 0 / 0.12);
-  border-radius: 999px;
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
-}
-
-.chip-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 0 0 8px var(--primary);
-  animation: wwo-pulseDot 2s ease-in-out infinite;
-}
-
-.chip-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.24em;
-  color: rgba(255,255,255,0.85);
-  font-weight: 600;
-}
-
 /* ============================================================
-   PREMIUM HUD — bottom bar with segmented progress
+   PREMIUM SCROLL-DRIVEN VIBRANT GLOW INDICATOR
    ============================================================ */
-.video-hud {
+.vertical-glow-track {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 6;
-  padding: 1.25rem 1.35rem 1.35rem;
-  background:
-    linear-gradient(180deg, oklch(0.12 0.04 285 / 0) 0%, oklch(0.12 0.04 285 / 0.6) 35%, oklch(0.12 0.04 285 / 0.92) 100%);
+  top: 10px; /* Small inner padding */
+  bottom: 10px; /* Small inner padding */
+  right: 0px; /* Align to edge of the video frame */
+  width: 22px;
+  z-index: 20; /* Keep it strictly above the video */
   pointer-events: none;
 }
 
-.hud-top {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.95rem;
-}
-
-.hud-step {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  min-width: 0;
-}
-
-/* Flip counter — big step number */
-.hud-step-index {
-  position: relative;
-  width: 2.6ch;
-  height: 1.05em;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-variant-numeric: tabular-nums;
-  font-size: clamp(1.9rem, 2.7vw, 2.5rem);
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #fff;
-  overflow: hidden;
-}
-
-.hud-step-index .digit-a,
-.hud-step-index .digit-b {
+.video-scroll-notch {
   position: absolute;
-  inset: 0;
-  display: block;
-  will-change: transform, opacity;
-  transition: transform 0.55s cubic-bezier(0.65,0,0.35,1), opacity 0.4s ease;
+  right: 0px; /* Snapped perfectly flush to the right edge of the video */
+  width: 28px; /* Wide enough to cut inward */
+  height: 80px; 
+  transform: translateY(-50%);
+  will-change: top;
+  transition: top 0.1s ease-out;
 }
 
-.hud-step-index .digit-b {
-  transform: translateY(100%);
-  opacity: 0;
-}
-
-.hud-step-index.flipping .digit-a {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-.hud-step-index.flipping .digit-b {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.hud-step-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.hud-label {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.005em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
-}
-
-.hud-label.flipping {
-  opacity: 0;
-  transform: translateY(6px);
-}
-
-.hud-sub {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.66rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
-  font-weight: 500;
-}
-
-.hud-percent {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.1rem;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-variant-numeric: tabular-nums;
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: rgba(255,255,255,0.72);
-  letter-spacing: 0.05em;
-  padding: 0.28rem 0.6rem;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.04);
-  backdrop-filter: blur(8px);
-}
-
-.hud-percent-mark {
-  opacity: 0.55;
-  margin-left: 1px;
-}
-
-/* ---- Segmented rail ---- */
-.hud-track {
-  position: relative;
-  padding-top: 0.35rem;
-  padding-bottom: 0.5rem;
-}
-
-.hud-segments {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  height: 4px;
-  position: relative;
-  z-index: 1;
-}
-
-.hud-segment {
-  position: relative;
+.vibrant-glow-orb {
+  width: 100%;
   height: 100%;
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(0,0,0,0.25), rgba(255,255,255,0.03)),
-    rgba(255,255,255,0.10);
+  /* Flat on the right side, heavily rounded on the left */
+  border-radius: 999px 0 0 999px;
+  background: var(--background);
+  border: 2px solid rgba(200, 150, 255, 0.9);
+  border-right: none; /* Merges completely with the website background */
+  
+  /* Aggressively clip any shadow that tries to bleed out the right edge */
+  clip-path: inset(-50px 0 -50px -50px);
+  
   box-shadow:
-    inset 0 1px 0 rgba(0,0,0,0.3),
-    inset 0 -1px 0 rgba(255,255,255,0.05);
-  overflow: hidden;
-}
-
-.hud-segment .seg-fill {
-  position: absolute;
-  inset: 0;
-  width: 0%;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, oklch(0.82 0.12 295 / 0.95), var(--primary) 60%, oklch(0.55 0.25 290));
-  box-shadow:
-    0 0 12px oklch(0.62 0.22 290 / 0.55),
-    inset 0 1px 0 rgba(255,255,255,0.35),
-    inset 0 -1px 0 rgba(0,0,0,0.25);
-  will-change: width;
-  transition: width 0.05s linear;
-}
-
-/* Animated gloss sweep */
-.hud-segment .seg-fill::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
-  transform: translateX(-100%);
-  animation: wwo-segGloss 3.4s ease-in-out infinite;
-}
-
-@keyframes wwo-segGloss {
-  0% { transform: translateX(-100%); }
-  60%, 100% { transform: translateX(220%); }
-}
-
-.hud-segment.current .seg-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 14px;
-  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.85));
-  filter: blur(2px);
-  animation: wwo-shimmerHead 1.6s ease-in-out infinite;
-}
-
-@keyframes wwo-shimmerHead {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* ---- Traveling scrubber ---- */
-.hud-scrubber {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  pointer-events: none;
-  will-change: transform;
-  z-index: 3;
-}
-
-.scrubber-line {
-  position: absolute;
-  left: -0.5px;
-  top: 0;
-  width: 1px;
-  height: calc(0.35rem + 4px + 4px);
-  background: linear-gradient(180deg, oklch(0.82 0.12 295 / 0), oklch(0.82 0.12 295 / 0.75) 40%, #fff 100%);
-  box-shadow: 0 0 6px oklch(0.82 0.12 295 / 0.75);
-  transform: translateX(-0.5px);
-}
-
-.scrubber-head {
-  position: absolute;
-  top: calc(0.35rem + 2px);
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #fff, oklch(0.82 0.12 295) 55%, var(--primary));
-  transform: translate(-50%, -50%);
-  box-shadow:
-    0 0 0 2px oklch(0.15 0.04 285 / 0.85),
-    0 0 12px oklch(0.82 0.12 295 / 0.9),
-    0 0 24px oklch(0.62 0.22 290 / 0.75);
-}
-
-.scrubber-halo {
-  position: absolute;
-  top: calc(0.35rem + 2px);
-  left: 0;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, oklch(0.62 0.22 290 / 0.35), oklch(0.62 0.22 290 / 0) 65%);
-  filter: blur(2px);
-  animation: wwo-haloPulse 2.4s ease-in-out infinite;
-}
-
-@keyframes wwo-haloPulse {
-  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.9); }
-  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    /* Glow pushed deeply inward to the left (into the video) */
+    -5px 0 15px 2px rgba(160, 110, 210, 0.8),
+    -10px 0 30px 5px rgba(160, 110, 210, 0.5),
+    /* Inner shadow strictly hugging the left inside border */
+    inset 4px 0 8px 0px rgba(160, 110, 210, 0.6);
 }
 
 /* ============================================================
