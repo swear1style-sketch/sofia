@@ -131,42 +131,74 @@ export function WhatWeOffer() {
     }
   }, [activeStep]);
 
-  /* ── Progress simulation: fills the active segment over ~3 s ── */
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const SEGMENT_DURATION = 13.30125; // 53.205s total / 4 steps
+
+  /* ── Sync video with active step & auto-scroll ── */
+  const isAutoScrolling = useRef(false);
+
   useEffect(() => {
-    const fills = [...segFills];
-    /* Mark all previous segments as fully filled */
-    for (let i = 0; i < activeStep; i++) fills[i] = 100;
-    /* Reset current and future */
-    fills[activeStep] = 0;
-    for (let i = activeStep + 1; i < 4; i++) fills[i] = 0;
-    setSegFills(fills);
-    setHudPercent(Math.round((activeStep / 4) * 100));
+    isAutoScrolling.current = false;
+    
+    if (videoRef.current && activeStep >= 0) {
+      const targetTime = activeStep * SEGMENT_DURATION;
+      const currentTime = videoRef.current.currentTime;
+      // If user scrolled manually, snap the video to the correct segment
+      if (currentTime < targetTime || currentTime > targetTime + SEGMENT_DURATION) {
+        videoRef.current.currentTime = targetTime;
+      }
+    }
+  }, [activeStep]);
 
-    let frame: number;
-    let start: number | null = null;
-    const duration = 3000; // ms
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
 
-    const tick = (ts: number) => {
-      if (!start) start = ts;
-      const elapsed = ts - start;
-      const pct = Math.min((elapsed / duration) * 100, 100);
+    const handleTimeUpdate = () => {
+      const time = video.currentTime;
+      
+      // Boundary check: if video exceeds the current segment
+      if (activeStep >= 0 && time >= (activeStep + 1) * SEGMENT_DURATION) {
+        if (activeStep < 3) {
+          // Auto-scroll to the next step!
+          if (!isAutoScrolling.current) {
+            isAutoScrolling.current = true;
+            const nextStepEl = stepRefs.current[activeStep + 1];
+            if (nextStepEl) {
+              const top = nextStepEl.getBoundingClientRect().top + window.scrollY;
+              // Center the step in the viewport (using the same 0.42 offset from scroll logic)
+              const offset = top - (window.innerHeight * 0.42) + (nextStepEl.clientHeight / 2);
+              window.scrollTo({ top: offset, behavior: 'smooth' });
+            }
+          }
+        } else {
+          // Last step finished: loop the last segment
+          video.currentTime = activeStep * SEGMENT_DURATION;
+        }
+      }
 
-      setSegFills((prev) => {
-        const next = [...prev];
-        next[activeStep] = pct;
-        return next;
-      });
+      // Update HUD progress visually synced to the video
+      if (activeStep >= 0) {
+        const segmentStart = activeStep * SEGMENT_DURATION;
+        const elapsedInSegment = time - segmentStart;
+        const pct = Math.max(0, Math.min((elapsedInSegment / SEGMENT_DURATION) * 100, 100));
 
-      const basePercent = (activeStep / 4) * 100;
-      const segWeight = 25; // each segment = 25% of total
-      setHudPercent(Math.round(basePercent + (pct / 100) * segWeight));
+        setSegFills((prev) => {
+          const next = [...prev];
+          for (let i = 0; i < activeStep; i++) next[i] = 100;
+          for (let i = activeStep + 1; i < 4; i++) next[i] = 0;
+          next[activeStep] = pct;
+          return next;
+        });
 
-      if (pct < 100) frame = requestAnimationFrame(tick);
+        const basePercent = (activeStep / 4) * 100;
+        const segWeight = 25;
+        setHudPercent(Math.round(basePercent + (pct / 100) * segWeight));
+      }
     };
 
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    return () => video.removeEventListener("timeupdate", handleTimeUpdate);
   }, [activeStep]);
 
   /* ── Scrubber position (px offset across the full track) ── */
@@ -232,83 +264,92 @@ export function WhatWeOffer() {
         {/* Sticky video card (left column) */}
         <div className="process-video-sticky">
           <div className="video-preview-wrapper">
-            <video
-              id="process-video"
-              src={whatWeDoVideo}
-              muted
-              autoPlay
-              loop
-              playsInline
-              preload="auto"
-            />
+            {/* iPad Camera */}
+            <div className="video-preview-wrapper-camera" aria-hidden="true" />
+            
+            {/* iPad Home Button */}
+            <div className="video-preview-wrapper-home" aria-hidden="true" />
 
-            {/* Top corner chip */}
-            <div className="video-corner-chip" aria-hidden="true">
-              <span className="chip-dot" />
-              <span className="chip-text">LIVE PREVIEW</span>
-            </div>
+            <div className="tablet-screen">
+              <video
+                id="process-video"
+                ref={videoRef}
+                src={whatWeDoVideo}
+                muted
+                autoPlay
+                loop
+                playsInline
+                preload="auto"
+              />
 
-            {/* Bottom HUD */}
-            <div className="video-hud" aria-hidden="true">
-              <div className="hud-top">
-                <div className="hud-step">
-                  <div
-                    className={`hud-step-index${isFlipping ? " flipping" : ""}`}
-                    id="hud-step-index"
-                  >
-                    <span className="digit-a">
-                      {String(prevStepRef.current + 1).padStart(2, "0")}
-                    </span>
-                    <span className="digit-b">
-                      {String(activeStep + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                  <div className="hud-step-info">
-                    <span
-                      className={`hud-label${isFlipping ? " flipping" : ""}`}
-                      id="hud-step-label"
-                    >
-                      {STEP_LABELS[activeStep]}
-                    </span>
-                    <span className="hud-sub">
-                      Step&nbsp;
-                      <span id="hud-step-current">
-                        {String(activeStep + 1).padStart(2, "0")}
-                      </span>
-                      &nbsp;of&nbsp;04
-                    </span>
-                  </div>
-                </div>
-                <div className="hud-percent">
-                  <span id="hud-percent">{hudPercent}</span>
-                  <span className="hud-percent-mark">%</span>
-                </div>
+              {/* Top corner chip */}
+              <div className="video-corner-chip" aria-hidden="true">
+                <span className="chip-dot" />
+                <span className="chip-text">LIVE PREVIEW</span>
               </div>
 
-              <div className="hud-track" role="progressbar" ref={trackRef}>
-                <div className="hud-segments">
-                  {segFills.map((fill, i) => (
+              {/* Bottom HUD */}
+              <div className="video-hud" aria-hidden="true">
+                <div className="hud-top">
+                  <div className="hud-step">
                     <div
-                      key={i}
-                      className={`hud-segment${i === activeStep ? " current" : ""}`}
-                      data-step={i + 1}
+                      className={`hud-step-index${isFlipping ? " flipping" : ""}`}
+                      id="hud-step-index"
                     >
-                      <span
-                        className="seg-fill"
-                        style={{ width: `${fill}%` }}
-                      />
+                      <span className="digit-a">
+                        {String(prevStepRef.current + 1).padStart(2, "0")}
+                      </span>
+                      <span className="digit-b">
+                        {String(activeStep + 1).padStart(2, "0")}
+                      </span>
                     </div>
-                  ))}
+                    <div className="hud-step-info">
+                      <span
+                        className={`hud-label${isFlipping ? " flipping" : ""}`}
+                        id="hud-step-label"
+                      >
+                        {STEP_LABELS[activeStep]}
+                      </span>
+                      <span className="hud-sub">
+                        Step&nbsp;
+                        <span id="hud-step-current">
+                          {String(activeStep + 1).padStart(2, "0")}
+                        </span>
+                        &nbsp;of&nbsp;04
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hud-percent">
+                    <span id="hud-percent">{hudPercent}</span>
+                    <span className="hud-percent-mark">%</span>
+                  </div>
                 </div>
 
-                <div
-                  className="hud-scrubber"
-                  aria-hidden="true"
-                  style={{ transform: `translateX(${scrubberX}px)` }}
-                >
-                  <span className="scrubber-line" />
-                  <span className="scrubber-head" />
-                  <span className="scrubber-halo" />
+                <div className="hud-track" role="progressbar" ref={trackRef}>
+                  <div className="hud-segments">
+                    {segFills.map((fill, i) => (
+                      <div
+                        key={i}
+                        className={`hud-segment${i === activeStep ? " current" : ""}`}
+                        data-step={i + 1}
+                      >
+                        <span
+                          className="seg-fill"
+                          style={{ width: `${fill}%` }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <div
+                    className="hud-scrubber"
+                    aria-hidden="true"
+                    style={{ transform: `translateX(${scrubberX}px)` }}
+                  >
+                    <span className="scrubber-line" />
+                    <span className="scrubber-head" />
+                    <span className="scrubber-halo" />
+                  </div>
                 </div>
               </div>
             </div>
