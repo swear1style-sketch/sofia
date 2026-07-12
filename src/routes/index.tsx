@@ -150,19 +150,6 @@ function Index() {
               </a>
             </motion.div>
 
-            {/* Studio-style meta strip */}
-            <motion.div
-              className="mt-16 flex items-center gap-6 text-[10px] font-medium uppercase tracking-[0.4em] text-foreground/50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.2, ease: EASE_OUT, delay: D + 1.1 }}
-            >
-              <span>V. 26.01</span>
-              <span className="h-px w-8 bg-foreground/25" />
-              <span>Est. 2024</span>
-              <span className="h-px w-8 bg-foreground/25" />
-              <span>Sofia Studio</span>
-            </motion.div>
           </div>
 
           <motion.div
