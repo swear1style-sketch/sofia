@@ -51,7 +51,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/0.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ opacity: opacity0, zIndex: 5, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
           />
 
@@ -59,7 +59,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/1.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ opacity: opacity1, zIndex: 10, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
           />
 
@@ -67,7 +67,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/2.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ opacity: opacity2, zIndex: 20, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
           />
 
@@ -75,7 +75,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/3.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ opacity: opacity3, zIndex: 30, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
           />
 
@@ -92,7 +92,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/4.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ 
               opacity: opacity4, 
               zIndex: 40,
@@ -108,7 +108,7 @@ export function StoryboardParallax() {
           <motion.img
             src="/svg/4.svg"
             alt=""
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ opacity: opacity5, zIndex: 50, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
           />
         </motion.div>

@@ -42,42 +42,62 @@ const initial: Card[] = [
 export function HeroCardStack() {
   const [cards, setCards] = useState<Card[]>(initial);
   const [flying, setFlying] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Mouse parallax
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const smx = useSpring(mx, { stiffness: 90, damping: 20, mass: 0.6 });
-  const smy = useSpring(my, { stiffness: 90, damping: 20, mass: 0.6 });
-  const deckRotateY = useTransform(smx, [-1, 1], [12, -12]);
-  const deckRotateX = useTransform(smy, [-1, 1], [-8, 8]);
+  // Check if we are on a mobile device for performance optimization
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile(); // Check on mount
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
-  const handleMove = useCallback((e: React.MouseEvent) => {
-    const el = containerRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 2 - 1;
-    const y = ((e.clientY - r.top) / r.height) * 2 - 1;
-    mx.set(x);
-    my.set(y);
-  }, [mx, my]);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Springs for silky, heavy deck rotation
+  const deckRotateX = useSpring(useTransform(mouseY, [-1, 1], [16, -16]), {
+    stiffness: 120,
+    damping: 30,
+    mass: 1.2,
+  });
+  const deckRotateY = useSpring(useTransform(mouseX, [-1, 1], [-16, 16]), {
+    stiffness: 120,
+    damping: 30,
+    mass: 1.2,
+  });
+
+  const handleMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - left) / width;
+    const y = (e.clientY - top) / height;
+    mouseX.set(x * 2 - 1);
+    mouseY.set(y * 2 - 1);
+  }, [mouseX, mouseY]);
 
   const handleLeave = useCallback(() => {
-    mx.set(0);
-    my.set(0);
-  }, [mx, my]);
+    mouseX.set(0);
+    mouseY.set(0);
+  }, [mouseX, mouseY]);
 
-  // Auto-cycle
   useEffect(() => {
-    const id = setInterval(() => {
+    // 3.6s cycle allows the user to read the top card before it animates
+    const interval = setInterval(() => {
       setFlying(true);
-      // After the fly-out animation completes, rotate the array.
-      window.setTimeout(() => {
-        setCards((prev) => [...prev.slice(1), prev[0]]);
+      setTimeout(() => {
+        setCards((prev) => {
+          const arr = [...prev];
+          const top = arr.shift();
+          if (top) arr.push(top);
+          return arr;
+        });
         setFlying(false);
-      }, 900);
-    }, 4200);
-    return () => clearInterval(id);
+      }, 900); // Wait for the fly out to visually clear before popping it to the back
+    }, 3600);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -85,30 +105,29 @@ export function HeroCardStack() {
       ref={containerRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      className="relative mx-auto flex h-[620px] w-full max-w-[700px] items-end justify-center select-none"
+      className="relative mx-auto flex h-[620px] w-full max-w-[700px] items-end justify-center select-none scale-[0.8] origin-bottom sm:scale-100"
       style={{ perspective: "1600px" }}
     >
       {/* Ambient glow beneath the deck — kept ultra subtle so the flat lavender
-          hero stays clean; just enough to seat the deck in space. */}
+          background remains clean and uninterrupted. */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-10 left-1/2 h-40 w-[80%] -translate-x-1/2 rounded-full opacity-60"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[280px] h-[40px] rounded-[100%]"
         style={{
-          background:
-            "radial-gradient(closest-side, oklch(0.62 0.22 290 / 0.22), transparent 70%)",
-          filter: "blur(32px)",
+          background: "radial-gradient(ellipse at center, rgba(160,110,210,0.18) 0%, rgba(160,110,210,0) 70%)",
+          filter: "blur(20px)",
         }}
       />
 
-      {/* 3D podium */}
-      <img
+      {/* The metallic, premium podium. Layered below the deck to ground it. */}
+      <motion.img
         src={podiumImage}
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute bottom-6 left-1/2 z-0 h-auto w-[380px] max-w-[85%] -translate-x-1/2"
-        width={461}
-        height={195}
-        loading="lazy"
+        alt="Display Podium"
+        className="absolute bottom-0 z-0 w-[380px] max-w-[85%] object-contain"
+        style={{
+          rotateX: deckRotateX,
+          rotateY: deckRotateY,
+          transformStyle: "preserve-3d",
+        }}
       />
 
       {/* Deck */}
@@ -137,7 +156,7 @@ export function HeroCardStack() {
                 rotateY: -55,
                 rotateX: 14,
                 rotateZ: 8,
-                filter: "blur(2px) brightness(0.9)",
+                filter: isMobile ? "brightness(0.9)" : "blur(2px) brightness(0.9)",
                 opacity: 0,
                 transition: {
                   duration: 0.9,
@@ -160,7 +179,7 @@ export function HeroCardStack() {
                   rotateY: -18,
                   rotateX: 4,
                   rotateZ: 0,
-                  filter: `blur(${i === 0 ? 0 : i * 0.3}px) brightness(${1 - i * 0.06})`,
+                  filter: isMobile ? `brightness(${1 - i * 0.06})` : `blur(${i === 0 ? 0 : i * 0.3}px) brightness(${1 - i * 0.06})`,
                   opacity: i > 4 ? 0 : 1,
                 }
               }

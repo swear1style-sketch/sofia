@@ -598,10 +598,11 @@
   }
 
   .process-video-sticky {
-    position: relative;
-    top: auto;
+    position: sticky;
+    top: 10vh;
     order: 1;
     padding-bottom: 2rem;
+    z-index: 20;
   }
 
   .process-steps {
@@ -615,5 +616,9 @@
 
   .features-section {
     padding: 5rem 1.25rem 3rem;
+  }
+
+  .video-preview-wrapper {
+    max-height: 45vh;
   }
 }
