@@ -7,14 +7,6 @@ import whatWeDoVideo from "../assets/what-we-do.mp4";
 const STEPS = [
   {
     index: "01",
-    kicker: "Benefit\u00a0·\u00a0Design",
-    heading: "Design your",
-    headingEm: "campaign",
-    description:
-      "Compose high-impact creatives in minutes using AI-assisted layouts and variants. Iterate quickly, launch faster, keep your brand consistent across every format.",
-  },
-  {
-    index: "02",
     kicker: "Benefit\u00a0·\u00a0Upload",
     heading: "Upload your",
     headingEm: "assets",
@@ -22,7 +14,7 @@ const STEPS = [
       "Drop in your logos, videos and copy — SofiaPulse auto-resizes, formats and packages them for every placement. No more manual export loops.",
   },
   {
-    index: "03",
+    index: "02",
     kicker: "Benefit\u00a0·\u00a0Distribute",
     heading: "Push to your",
     headingEm: "DSP",
@@ -30,7 +22,7 @@ const STEPS = [
       "One-click distribution to any DSP or ad server. Sofia handles the trafficking specs so your campaigns go live across Display, OLV, Native and CTV — instantly.",
   },
   {
-    index: "04",
+    index: "03",
     kicker: "Benefit\u00a0·\u00a0Optimize",
     heading: "Track &",
     headingEm: "optimize",
@@ -40,7 +32,6 @@ const STEPS = [
 ] as const;
 
 const STEP_LABELS = [
-  "Design your campaign",
   "Upload your assets",
   "Push to your DSP",
   "Track & optimize",
@@ -49,7 +40,7 @@ const STEP_LABELS = [
 export function WhatWeOffer() {
   const [activeStep, setActiveStep] = useState(-1);
   const [hudPercent, setHudPercent] = useState(0);
-  const [segFills, setSegFills] = useState([0, 0, 0, 0]);
+  const [segFills, setSegFills] = useState([0, 0, 0]);
   const [isFlipping, setIsFlipping] = useState(false);
 
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -140,7 +131,7 @@ export function WhatWeOffer() {
   }, [activeStep]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const SEGMENT_DURATION = 13.30125; // 53.205s total / 4 steps
+  const SEGMENT_DURATION = 13.30125; // 53.205s total / 4 original steps
 
   /* ── Sync video with active step & auto-scroll ── */
   const isAutoScrolling = useRef(false);
@@ -149,7 +140,8 @@ export function WhatWeOffer() {
     isAutoScrolling.current = false;
     
     if (videoRef.current && activeStep >= 0) {
-      const targetTime = activeStep * SEGMENT_DURATION;
+      // Offset by +1 to skip the first intro segment of the video
+      const targetTime = (activeStep + 1) * SEGMENT_DURATION;
       const currentTime = videoRef.current.currentTime;
       // If user scrolled manually, snap the video to the correct segment
       if (currentTime < targetTime || currentTime > targetTime + SEGMENT_DURATION) {
@@ -165,9 +157,9 @@ export function WhatWeOffer() {
     const handleTimeUpdate = () => {
       const time = video.currentTime;
       
-      // Boundary check: if video exceeds the current segment
-      if (activeStep >= 0 && time >= (activeStep + 1) * SEGMENT_DURATION) {
-        if (activeStep < 3) {
+      // Boundary check: if video exceeds the current segment (offset by +1)
+      if (activeStep >= 0 && time >= (activeStep + 2) * SEGMENT_DURATION) {
+        if (activeStep < 2) {
           // Auto-scroll to the next step!
           if (!isAutoScrolling.current) {
             isAutoScrolling.current = true;
@@ -181,26 +173,26 @@ export function WhatWeOffer() {
           }
         } else {
           // Last step finished: loop the last segment
-          video.currentTime = activeStep * SEGMENT_DURATION;
+          video.currentTime = (activeStep + 1) * SEGMENT_DURATION;
         }
       }
 
       // Update HUD progress visually synced to the video
       if (activeStep >= 0) {
-        const segmentStart = activeStep * SEGMENT_DURATION;
+        const segmentStart = (activeStep + 1) * SEGMENT_DURATION;
         const elapsedInSegment = time - segmentStart;
         const pct = Math.max(0, Math.min((elapsedInSegment / SEGMENT_DURATION) * 100, 100));
 
         setSegFills((prev) => {
           const next = [...prev];
           for (let i = 0; i < activeStep; i++) next[i] = 100;
-          for (let i = activeStep + 1; i < 4; i++) next[i] = 0;
+          for (let i = activeStep + 1; i < 3; i++) next[i] = 0;
           next[activeStep] = pct;
           return next;
         });
 
-        const basePercent = (activeStep / 4) * 100;
-        const segWeight = 25;
+        const basePercent = (activeStep / 3) * 100;
+        const segWeight = 33.33;
         setHudPercent(Math.round(basePercent + (pct / 100) * segWeight));
       }
     };
@@ -208,20 +200,6 @@ export function WhatWeOffer() {
     video.addEventListener("timeupdate", handleTimeUpdate);
     return () => video.removeEventListener("timeupdate", handleTimeUpdate);
   }, [activeStep]);
-
-  /* ── Scrubber position (px offset across the full track) ── */
-  const trackRef = useRef<HTMLDivElement>(null);
-  const getScrubberX = useCallback(() => {
-    if (!trackRef.current) return 0;
-    const trackW = trackRef.current.offsetWidth;
-    const segW = (trackW - 6 * 3) / 4; // 4 segments, 3 gaps of 6px
-    const gapW = 6;
-    const baseX = activeStep * (segW + gapW);
-    const fillPx = (segFills[activeStep] / 100) * segW;
-    return baseX + fillPx;
-  }, [activeStep, segFills]);
-
-  const scrubberX = getScrubberX();
 
   return (
     <section id="features" className="features-section" ref={sectionRef}>
@@ -232,7 +210,7 @@ export function WhatWeOffer() {
             <span className="eyebrow-dot" />
             What we offer
           </span>
-          <span className="section-index">01&nbsp;/&nbsp;04</span>
+          <span className="section-index">01&nbsp;/&nbsp;03</span>
         </div>
         <h2 className="features-title">
           An <em>intelligent</em> platform,
@@ -284,19 +262,6 @@ export function WhatWeOffer() {
                   preload="auto"
                 />
               </div>
-
-              {/* Scroll-Driven Moving Border Glow (Outside the video, attached to border) */}
-              <motion.div 
-                className="absolute w-[4px] h-[150px] z-20 rounded-full" 
-                style={{ 
-                  right: "-4px", /* Sits perfectly outside the right border */
-                  top: notchTop,
-                  transform: "translateY(-50%)",
-                  background: "linear-gradient(to bottom, transparent, rgba(160, 110, 210, 1) 40%, rgba(200, 150, 255, 1) 50%, rgba(160, 110, 210, 1) 60%, transparent)",
-                  /* Pure omnidirectional glow, no drop shadow offsets */
-                  boxShadow: "0 0 35px 12px rgba(160, 110, 210, 0.8), 0 0 15px 4px rgba(255, 255, 255, 0.6)" 
-                }} 
-              />
             </div>
           </div>
       </div>
