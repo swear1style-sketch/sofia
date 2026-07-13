@@ -44,7 +44,7 @@ export function StoryboardParallax() {
             z: 0, 
             backfaceVisibility: "hidden", 
             WebkitBackfaceVisibility: "hidden",
-            willChange: "transform" 
+            willChange: "transform"
           }}
         >
           {/* Base Layer: Frame 0 (All devices empty) */}
@@ -52,7 +52,18 @@ export function StoryboardParallax() {
             src="/svg/0.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ opacity: opacity0, zIndex: 5, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
+            style={{ 
+              opacity: opacity0, 
+              zIndex: 5, 
+              z: 0, 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden", 
+              willChange: "opacity",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
+            }}
           />
 
           {/* Layer 1: Monitor Ad appears */}
@@ -60,7 +71,18 @@ export function StoryboardParallax() {
             src="/svg/1.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ opacity: opacity1, zIndex: 10, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
+            style={{ 
+              opacity: opacity1, 
+              zIndex: 10, 
+              z: 0, 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden", 
+              willChange: "opacity",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
+            }}
           />
 
           {/* Layer 2: Ad 1 appears */}
@@ -68,7 +90,18 @@ export function StoryboardParallax() {
             src="/svg/2.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ opacity: opacity2, zIndex: 20, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
+            style={{ 
+              opacity: opacity2, 
+              zIndex: 20, 
+              z: 0, 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden", 
+              willChange: "opacity",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
+            }}
           />
 
           {/* Layer 3: Ad 2 appears */}
@@ -76,19 +109,21 @@ export function StoryboardParallax() {
             src="/svg/3.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ opacity: opacity3, zIndex: 30, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
+            style={{ 
+              opacity: opacity3, 
+              zIndex: 30, 
+              z: 0, 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden", 
+              willChange: "opacity",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
+            }}
           />
 
-          {/* Layer 4: Laptop Label (Final state but clipped to hide the billboard SCREEN content)
-              Uses polygon with L-shaped hole to cut out the billboard while preserving the laptop.
-              Billboard rect: x=859 y=231 w=237 h=351, stroke=black sw=10
-                Left=53.4%, Right=68.8%, Top=25.6%, Bottom=66.4%
-              Laptop rect: x=837 y=525 w=227 h=157, stroke=black sw=4
-                Left=52.2%, Right=66.6%, Top=59.5%, Bottom=77.2%
-              The hole is L-shaped:
-                Full billboard width (53.4% to 68.8%) from top 25.6% down to laptop top 59.5%
-                Then only the strip RIGHT of laptop (66.6% to 68.8%) from 59.5% down to 66.4%
-          */}
+          {/* Layer 4: Laptop Label (Final state but clipped to hide the billboard SCREEN content) */}
           <motion.img
             src="/svg/4.svg"
             alt=""
@@ -100,7 +135,11 @@ export function StoryboardParallax() {
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               willChange: "opacity, clip-path",
-              clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 25.6%, 53.4% 25.6%, 53.4% 59.5%, 66.6% 59.5%, 66.6% 66.4%, 68.8% 66.4%, 68.8% 25.6%, 0% 25.6%)"
+              clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 25.6%, 53.4% 25.6%, 53.4% 59.5%, 66.6% 59.5%, 66.6% 66.4%, 68.8% 66.4%, 68.8% 25.6%, 0% 25.6%)",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
             }}
           />
 
@@ -109,7 +148,18 @@ export function StoryboardParallax() {
             src="/svg/4.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ opacity: opacity5, zIndex: 50, z: 0, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden", willChange: "opacity" }}
+            style={{ 
+              opacity: opacity5, 
+              zIndex: 50, 
+              z: 0, 
+              backfaceVisibility: "hidden", 
+              WebkitBackfaceVisibility: "hidden", 
+              willChange: "opacity",
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+              WebkitMaskComposite: "source-in",
+              maskComposite: "intersect"
+            }}
           />
         </motion.div>
       </div>
