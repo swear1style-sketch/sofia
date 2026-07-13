@@ -285,15 +285,18 @@ export function WhatWeOffer() {
                 />
               </div>
 
-              {/* Scroll-Driven Minimal Line Progress Indicator */}
-              <div className="vertical-glow-track" aria-hidden="true">
-                <motion.div 
-                  className="video-scroll-notch" 
-                  style={{ top: notchTop }} 
-                >
-                  <div className="vibrant-glow-orb" />
-                </motion.div>
-              </div>
+              {/* Scroll-Driven Moving Border Glow (Outside the video, attached to border) */}
+              <motion.div 
+                className="absolute w-[4px] h-[150px] z-20 rounded-full" 
+                style={{ 
+                  right: "-4px", /* Sits perfectly outside the right border */
+                  top: notchTop,
+                  transform: "translateY(-50%)",
+                  background: "linear-gradient(to bottom, transparent, rgba(160, 110, 210, 1) 40%, rgba(200, 150, 255, 1) 50%, rgba(160, 110, 210, 1) 60%, transparent)",
+                  /* Pure omnidirectional glow, no drop shadow offsets */
+                  boxShadow: "0 0 35px 12px rgba(160, 110, 210, 0.8), 0 0 15px 4px rgba(255, 255, 255, 0.6)" 
+                }} 
+              />
             </div>
           </div>
       </div>

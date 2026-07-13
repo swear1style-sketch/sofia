@@ -261,49 +261,6 @@
 }
 
 /* ============================================================
-   PREMIUM SCROLL-DRIVEN VIBRANT GLOW INDICATOR
-   ============================================================ */
-.vertical-glow-track {
-  position: absolute;
-  top: 10px; /* Small inner padding */
-  bottom: 10px; /* Small inner padding */
-  right: 0px; /* Align to edge of the video frame */
-  width: 22px;
-  z-index: 20; /* Keep it strictly above the video */
-  pointer-events: none;
-}
-
-.video-scroll-notch {
-  position: absolute;
-  right: 0px; /* Snapped perfectly flush to the right edge of the video */
-  width: 28px; /* Wide enough to cut inward */
-  height: 80px; 
-  transform: translateY(-50%);
-  will-change: top;
-  transition: top 0.1s ease-out;
-}
-
-.vibrant-glow-orb {
-  width: 100%;
-  height: 100%;
-  /* Flat on the right side, heavily rounded on the left */
-  border-radius: 999px 0 0 999px;
-  background: var(--background);
-  border: 2px solid rgba(200, 150, 255, 0.9);
-  border-right: none; /* Merges completely with the website background */
-  
-  /* Aggressively clip any shadow that tries to bleed out the right edge */
-  clip-path: inset(-50px 0 -50px -50px);
-  
-  box-shadow:
-    /* Glow pushed deeply inward to the left (into the video) */
-    -5px 0 15px 2px rgba(160, 110, 210, 0.8),
-    -10px 0 30px 5px rgba(160, 110, 210, 0.5),
-    /* Inner shadow strictly hugging the left inside border */
-    inset 4px 0 8px 0px rgba(160, 110, 210, 0.6);
-}
-
-/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 900px) {

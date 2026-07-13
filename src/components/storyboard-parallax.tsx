@@ -30,8 +30,10 @@ export function StoryboardParallax() {
   // Step 5: Billboard Ad + Label appears. (Animation kept EXACTLY the same as requested)
   const opacity5 = useTransform(scrollYProgress, [0.85, 1], [0, 1]);
 
-  // Unified cinematic zoom as the user scrolls down through the storyboard (increased zoom effect)
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  // Unified cinematic zoom as the user scrolls down through the storyboard.
+  // Starts significantly smaller (0.75) for a dramatic zoom-in effect.
+  // Ends exactly at normal size (1) to guarantee no text is cut off at the edges.
+  const scale = useTransform(scrollYProgress, [0, 1], [0.75, 1]);
 
   return (
     // Reduced height from 500vh to 400vh to increase scroll speed by 20%
