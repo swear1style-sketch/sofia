@@ -249,26 +249,15 @@ export function WhatWeOffer() {
 
         {/* Sticky video card (left column) */}
         <div className="process-video-sticky">
-            <div className="tablet-screen">
+            <div className="device-frame">
+              {/* Bezel Window Controls */}
+              <div className="device-dots">
+                <span className="device-dot" />
+                <span className="device-dot" />
+                <span className="device-dot" />
+              </div>
               
-              {/* Ambient Spill Glow — tall thin bar with wide purple bloom */}
-              <motion.div 
-                className="absolute pointer-events-none" 
-                style={{ 
-                  zIndex: 0,
-                  right: "-6px",
-                  top: notchTop,
-                  transform: "translateY(-50%)",
-                  width: "4px",      /* Very thin bar */
-                  height: "30%",     /* Reduced height */
-                  borderRadius: "100px",
-                  background: "rgba(170, 90, 255, 1)",  /* Full opacity core */
-                  filter: "blur(8px)",  /* Tight blur for thin intense bar */
-                  boxShadow: "0 0 40px 12px rgba(150, 70, 255, 0.7)", /* Wide purple ambient halo */
-                }}
-              />
-
-              <div className="video-clip-wrapper" style={{ zIndex: 10, background: "#000" }}>
+              <div className="device-screen">
                 <video
                   id="process-video"
                   ref={videoRef}

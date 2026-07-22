@@ -7,16 +7,14 @@ export function StoryboardParallax() {
   // Track the scroll progress through the 400vh container
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end end"],
+    offset: ["start end", "end end"],
   });
 
   // Since the SVGs are solid images containing the background and previous states,
   // we can simply stack them and fade the top layers in sequentially to simulate 
   // elements popping into the scene.
 
-  // Step 1: Monitor Ad (Frame 1) fades in, while Frame 0 (blank) fades out to prevent background bleeding
-  const opacity0 = useTransform(scrollYProgress, [0.03, 0.15], [1, 0]);
-  const opacity1 = useTransform(scrollYProgress, [0.03, 0.15], [0, 1]);
+  // svg1 is now the base layer, so it doesn't need to fade in.
 
   // Step 2: Phone Ad (Frame 2) fades in
   const opacity2 = useTransform(scrollYProgress, [0.24, 0.36], [0, 1]);
@@ -49,37 +47,17 @@ export function StoryboardParallax() {
             willChange: "transform"
           }}
         >
-          {/* Base Layer: Frame 0 (All devices empty) */}
-          <motion.img
-            src="/svg/0.svg"
-            alt=""
-            className="absolute inset-0 h-full w-full object-contain md:object-cover"
-            style={{ 
-              opacity: opacity0, 
-              zIndex: 5, 
-              z: 0, 
-              backfaceVisibility: "hidden", 
-              WebkitBackfaceVisibility: "hidden", 
-              willChange: "opacity",
-              maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-              WebkitMaskComposite: "source-in",
-              maskComposite: "intersect"
-            }}
-          />
-
-          {/* Layer 1: Monitor Ad appears */}
+          {/* Base Layer: Monitor Ad (Frame 1) */}
           <motion.img
             src="/svg/1.svg"
             alt=""
             className="absolute inset-0 h-full w-full object-contain md:object-cover"
             style={{ 
-              opacity: opacity1, 
+              opacity: 1, 
               zIndex: 10, 
               z: 0, 
               backfaceVisibility: "hidden", 
               WebkitBackfaceVisibility: "hidden", 
-              willChange: "opacity",
               maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
               WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
               WebkitMaskComposite: "source-in",
