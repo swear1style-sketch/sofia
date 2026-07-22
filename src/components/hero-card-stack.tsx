@@ -1,5 +1,5 @@
-import { motion, useMotionValue, useSpring, useTransform, useMotionValueEvent, type MotionValue } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { motion, useMotionValueEvent, type MotionValue } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 import sneaker from "@/assets/card-sneaker.jpg";
 import sunglasses from "@/assets/card-sunglasses.jpg";
@@ -57,33 +57,11 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // ── Mouse parallax (spring-damped for weighted 3D tilt) ──
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const deckRotateX = useSpring(useTransform(mouseY, [-1, 1], [12, -12]), {
-    stiffness: 120, damping: 30, mass: 1.2,
-  });
-  const deckRotateY = useSpring(useTransform(mouseX, [-1, 1], [-12, 12]), {
-    stiffness: 120, damping: 30, mass: 1.2,
-  });
 
-  const handleMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!containerRef.current) return;
-    const { left, top, width, height } = containerRef.current.getBoundingClientRect();
-    mouseX.set(((e.clientX - left) / width) * 2 - 1);
-    mouseY.set(((e.clientY - top)  / height) * 2 - 1);
-  }, [mouseX, mouseY]);
-
-  const handleLeave = useCallback(() => {
-    mouseX.set(0);
-    mouseY.set(0);
-  }, [mouseX, mouseY]);
 
   return (
     <div
       ref={containerRef}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
       className="relative mx-auto flex h-[620px] w-full max-w-[700px] items-end justify-center select-none scale-[0.8] origin-bottom sm:scale-100"
       style={{ perspective: "1600px" }}
     >
@@ -97,17 +75,16 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
       />
 
       {/* Metallic podium */}
-      <motion.img
+      <img
         src={podiumImage}
         alt="Display Podium"
         className="absolute bottom-0 z-0 w-[380px] max-w-[85%] object-contain"
-        style={{ rotateX: deckRotateX, rotateY: deckRotateY, transformStyle: "preserve-3d" }}
       />
 
       {/* Deck */}
-      <motion.div
+      <div
         className="relative -translate-y-44 -translate-x-4 h-[300px] w-[380px] max-w-full"
-        style={{ transformStyle: "preserve-3d", rotateX: deckRotateX, rotateY: deckRotateY }}
+        style={{ transformStyle: "preserve-3d" }}
       >
         {CARDS.map((card, i) => {
           // ── Per-card scroll slot ──────────────────────────────────────
@@ -137,7 +114,9 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
           const stackY          = stackPos * -5;
           const stackScale      = Math.max(0.85, 1 - stackPos * 0.03);
           const stackBrightness = 1 - stackPos * 0.06;
-          const stackBlur       = isMobile ? 0 : stackPos * 0.3;
+          // NOTE: CSS blur was removed — it's extremely expensive on mobile GPUs
+          // and causes frame drops during scroll. Brightness dimming alone provides
+          // sufficient visual depth cue for the stack.
 
           // ── Ejection trajectory (eased) ──────────────────────────────
           // Card shifts right a bit, lifts slightly, and fades out smoothly
@@ -154,9 +133,8 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
           const finalY       = stackY + (rawEjectP > 0 ? ejectY : 0);
           const finalScale   = stackScale * (rawEjectP > 0 ? 1 + ejectP * 0.05 : 1);
           const finalOpacity = isEjected ? 0 : (rawEjectP > 0 ? Math.max(0, ejectOpacity) : (i > 4 ? 0 : 1));
-          const finalFilter  = isMobile
-            ? `brightness(${rawEjectP > 0 ? 1.15 : stackBrightness})`
-            : `blur(${stackBlur}px) brightness(${rawEjectP > 0 ? 1.15 : stackBrightness})`;
+          const finalBrightness = rawEjectP > 0 ? 1.15 : stackBrightness;
+          const finalFilter = `brightness(${finalBrightness})`;
 
           const thickness = 44;
 
@@ -175,20 +153,12 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
                 rotateZ: ejectP > 0 ? ejectRotateZ : 0,
                 opacity: finalOpacity,
                 filter: finalFilter,
-                willChange: "transform, opacity, filter",
+                willChange: rawEjectP > 0 && rawEjectP < 1 ? "transform, opacity" : "auto",
               }}
             >
-              {/* Floating bob animation — kept for idle cards only */}
-              <motion.div
+              <div
                 className="relative h-full w-full"
                 style={{ transformStyle: "preserve-3d" }}
-                animate={ejectP === 0 ? { y: [0, -8, 0] } : { y: 0 }}
-                transition={{
-                  duration: 5 + i * 0.35,
-                  repeat: ejectP === 0 ? Infinity : 0,
-                  ease: "easeInOut",
-                  delay: i * 0.2,
-                }}
               >
                 {/* Back face */}
                 <div
@@ -233,6 +203,8 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
                   <img
                     src={card.src}
                     alt={card.label}
+                    loading="eager"
+                    decoding="async"
                     className="h-[calc(100%-32px)] w-full object-cover"
                     draggable={false}
                   />
@@ -261,11 +233,11 @@ export function HeroCardStack({ scrollProgress }: { scrollProgress: MotionValue<
                     </div>
                   )}
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           );
         })}
-      </motion.div>
+      </div>
     </div>
   );
 }

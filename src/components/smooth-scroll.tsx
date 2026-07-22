@@ -12,12 +12,14 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const isMobile = window.innerWidth < 768;
+
     const lenis = new Lenis({
-      duration: 1.6,
+      duration: isMobile ? 1.0 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.85,
-      touchMultiplier: 1.3,
+      wheelMultiplier: isMobile ? 1.15 : 1.05,
+      touchMultiplier: 1.7,
     });
 
     let rafId = 0;
