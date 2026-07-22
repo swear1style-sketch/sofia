@@ -43,7 +43,7 @@ export function StoryboardParallax() {
   const scale = useTransform(scrollYProgress, [0, 1], [0.75, 1]);
 
   return (
-    <section ref={containerRef} className="relative h-[340vh] w-full bg-[#E7DBF2]">
+    <section ref={containerRef} className="relative h-[380vh] w-full bg-[#E7DBF2]">
       <div className="sticky top-0 flex h-screen w-full items-center justify-center overflow-hidden">
         <motion.div
           className="relative w-full h-full"

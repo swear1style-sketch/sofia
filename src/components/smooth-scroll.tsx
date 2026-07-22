@@ -15,11 +15,11 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     const isMobile = window.innerWidth < 768;
 
     const lenis = new Lenis({
-      duration: isMobile ? 1.0 : 1.2,
+      duration: isMobile ? 1.0 : 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: isMobile ? 1.15 : 1.05,
-      touchMultiplier: 1.7,
+      wheelMultiplier: isMobile ? 1.0 : 0.9,
+      touchMultiplier: 1.5,
     });
 
     let rafId = 0;

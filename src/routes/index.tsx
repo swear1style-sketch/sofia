@@ -53,7 +53,7 @@ function Index() {
       <LiquidNav />
 
       {/* ── Scroll-jacked hero: tall outer wrapper + sticky inner ── */}
-      <div ref={scrollJackRef} style={{ height: "323vh" }}>
+      <div ref={scrollJackRef} style={{ height: "380vh" }}>
         <div
           className="sticky top-0 w-full overflow-hidden"
           style={{ height: "100vh", backgroundColor: "#e7dbf2" }}
